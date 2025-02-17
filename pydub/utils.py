@@ -166,7 +166,7 @@ def which(program):
 
 def get_encoder_name():
     """
-    Return enconder default application for system, either avconv or ffmpeg
+    Return encoder default application for system, either avconv or ffmpeg
     """
     if which("avconv"):
         return "avconv"
@@ -180,7 +180,7 @@ def get_encoder_name():
 
 def get_player_name():
     """
-    Return enconder default application for system, either avconv or ffmpeg
+    Return encoder default application for system, either avconv or ffmpeg
     """
     if which("avplay"):
         return "avplay"
@@ -285,7 +285,7 @@ def mediainfo_json(filepath, read_ahead_limit=-1):
 
     try:
         info = json.loads(output)
-    except  json.decoder.JSONDecodeError:
+    except json.decoder.JSONDecodeError:
         # If ffprobe didn't give any information, just return it
         # (for example, because the file doesn't exist)
         return None
@@ -354,11 +354,9 @@ def mediainfo(filepath):
         output = output.replace("\r", "")
 
     for line in output.split("\n"):
-        # print(line)
         mobj = rgx.match(line)
 
         if mobj:
-            # print(mobj.groups())
             inner_dict, key, value = mobj.groups()
 
             if inner_dict:
@@ -399,7 +397,6 @@ def get_supported_codecs():
     if sys.platform == 'win32':
         output = output.replace("\r", "")
 
-
     rgx = re.compile(r"^([D.][E.][AVS.][I.][L.][S.]) (\w*) +(.*)")
     decoders = set()
     encoders = set()
@@ -425,19 +422,20 @@ def get_supported_decoders():
 def get_supported_encoders():
     return get_supported_codecs()[1]
 
+
 def stereo_to_ms(audio_segment):
-	'''
-	Left-Right -> Mid-Side
-	'''
-	channel = audio_segment.split_to_mono()
-	channel = [channel[0].overlay(channel[1]), channel[0].overlay(channel[1].invert_phase())]
-	return AudioSegment.from_mono_audiosegments(channel[0], channel[1])
+    '''
+    Left-Right -> Mid-Side
+    '''
+    channel = audio_segment.split_to_mono()
+    channel = [channel[0].overlay(channel[1]), channel[0].overlay(channel[1].invert_phase())]
+    return AudioSegment.from_mono_audiosegments(channel[0], channel[1])
+
 
 def ms_to_stereo(audio_segment):
-	'''
-	Mid-Side -> Left-Right
-	'''
-	channel = audio_segment.split_to_mono()
-	channel = [channel[0].overlay(channel[1]) - 3, channel[0].overlay(channel[1].invert_phase()) - 3]
-	return AudioSegment.from_mono_audiosegments(channel[0], channel[1])
-
+    '''
+    Mid-Side -> Left-Right
+    '''
+    channel = audio_segment.split_to_mono()
+    channel = [channel[0].overlay(channel[1]) - 3, channel[0].overlay(channel[1].invert_phase()) - 3]
+    return AudioSegment.from_mono_audiosegments(channel[0], channel[1])
