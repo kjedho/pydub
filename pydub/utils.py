@@ -154,9 +154,9 @@ def which(program):
         program += ".exe"
 
     if program == "ffprobe":
-	envdir_list = [os.curdir] + os.environ["FFPROBE"].split(os.pathsep)
+        envdir_list = [os.curdir] + os.environ["FFPROBE"].split(os.pathsep)
     else:
-    	envdir_list = [os.curdir] + os.environ["PATH"].split(os.pathsep)
+        envdir_list = [os.curdir] + os.environ["PATH"].split(os.pathsep)
 
     for envdir in envdir_list:
         program_path = os.path.join(envdir, program)
